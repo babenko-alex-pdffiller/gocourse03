@@ -15,11 +15,14 @@ func main() {
 	}
 	fmt.Println(i)
 
-	rand.Seed(time.Now().UnixNano())
-	if pkg.IsItCorrect(rand.Int(), rand.Int()) {
+	var a, b int
+	fmt.Scan(&a, &b)
+
+	if pkg.IsItCorrect(a, b) {
 		fmt.Println(`Correct!`)
 	}
 
+	rand.Seed(time.Now().UnixNano())
 	if a, b := rand.Int(), rand.Int(); pkg.IsItCorrect(a, b) {
 		fmt.Println(`Correct!`)
 	} else if a%b == 0 {

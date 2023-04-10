@@ -33,8 +33,6 @@ func main() {
 		fmt.Println(i)
 	}
 
-	//exercise
-
 	//for loop 4
 	for true {
 	}
@@ -109,4 +107,7 @@ Begin:
 	}
 
 	//exercise
+	// 1. scan diagnosis from keyboard (fever, leaking nose, etc.) - suggest the illness. Use if/else
+	// 2. scan the year season from keyboard. Suggest clothes. Use switch/case
+	// 3. make a game, where user must guess the number. Program answers "more" or "less" to lead user to the right answer. Use for loop and branching
 }
