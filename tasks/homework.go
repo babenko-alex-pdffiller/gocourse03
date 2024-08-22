@@ -109,7 +109,7 @@ func (s *Sector) addState(state SectorState) {
 }
 
 func main() {
-	rodents := [8]Rodent{
+	rodents := []Rodent{
 		{ID: 1, Type: Mice},
 		{ID: 2, Type: Rat},
 		{ID: 3, Type: Squirrel},
@@ -154,16 +154,24 @@ func main() {
 		}
 	}
 	fmt.Println("Daily report:")
-	for _, rodent := range rodents {
-		fmt.Printf("%s has been in the morning in %s", rodent.Type, getSectorID(rodent.Morning))
-		fmt.Printf(", in the afternoon in %s", getSectorID(rodent.Afternoon))
-		fmt.Printf(", in the evening in %s\n", getSectorID(rodent.Evening))
 
-		if rodent.hasPassedThroughTheSensor() {
-			fmt.Printf("passed through the sensor\n")
+	rodentId := rand.IntN(len(rodents)) + 1
+
+	for i, rodent := range rodents {
+		if rodent.ID == rodentId {
+			printRodentLocation(rodent)
+			rodents = append(rodents[:i], rodents[i+1:]...)
 		}
 	}
+}
+func printRodentLocation(rodent Rodent) {
+	fmt.Printf("%s with ID %d has been in the morning in %s", rodent.Type, rodent.ID, getSectorID(rodent.Morning))
+	fmt.Printf(", in the afternoon in %s", getSectorID(rodent.Afternoon))
+	fmt.Printf(", in the evening in %s\n", getSectorID(rodent.Evening))
 
+	if rodent.hasPassedThroughTheSensor() {
+		fmt.Printf("passed through the sensor\n")
+	}
 }
 
 func getSectorID(location *Location) SectorID {
