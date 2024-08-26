@@ -24,6 +24,13 @@ type Location struct {
 	Times          DayTime
 }
 
+func (l *Location) getSectorID() SectorID {
+	if l == nil {
+		return "nil"
+	}
+	return l.SectorID
+}
+
 type Rodent struct {
 	ID        int
 	Type      RodentType
@@ -60,6 +67,16 @@ func (r *Rodent) hasPassedThroughTheSensor() bool {
 	return (r.Morning != nil && r.Morning.IsSensorPassed) ||
 		(r.Afternoon != nil && r.Afternoon.IsSensorPassed) ||
 		(r.Evening != nil && r.Evening.IsSensorPassed)
+}
+
+func (r *Rodent) printRodentLocation() {
+	fmt.Printf("%s with ID %d has been in the morning in %s", r.Type, r.ID, r.Morning.getSectorID())
+	fmt.Printf(", in the afternoon in %s", r.Afternoon.getSectorID())
+	fmt.Printf(", in the evening in %s\n", r.Evening.getSectorID())
+
+	if r.hasPassedThroughTheSensor() {
+		fmt.Printf("passed through the sensor\n")
+	}
 }
 
 type DayTime string
@@ -120,13 +137,7 @@ func main() {
 		{ID: 8, Type: Porcupine},
 	}
 
-	sectors := []Sector{
-		{SectorID: TopLeft, HasSensor: false, Morning: SectorState{Times: Morning}, Afternoon: SectorState{Times: Afternoon}, Evening: SectorState{Times: Evening}},
-		{SectorID: TopRight, HasSensor: false, Morning: SectorState{Times: Morning}, Afternoon: SectorState{Times: Afternoon}, Evening: SectorState{Times: Evening}},
-		{SectorID: BottomLeft, HasSensor: false, Morning: SectorState{Times: Morning}, Afternoon: SectorState{Times: Afternoon}, Evening: SectorState{Times: Evening}},
-		{SectorID: BottomRight, HasSensor: false, Morning: SectorState{Times: Morning}, Afternoon: SectorState{Times: Afternoon}, Evening: SectorState{Times: Evening}},
-		{SectorID: Center, HasSensor: true, Morning: SectorState{Times: Morning}, Afternoon: SectorState{Times: Afternoon}, Evening: SectorState{Times: Evening}},
-	}
+	sectors := buildSercors()
 
 	dayTimes := [3]DayTime{
 		Morning,
@@ -137,9 +148,9 @@ func main() {
 	for _, dayTime := range dayTimes {
 		fmt.Printf("Now is %s\n", dayTime)
 
-		for is, _ := range sectors {
+		for is := range sectors {
 			sectorState := SectorState{Times: dayTime}
-			for ir, _ := range rodents {
+			for ir := range rodents {
 				if !rodents[ir].isMovingOnTime(dayTime) {
 					isMovingToCurrentSector := rand.IntN(2) == 0
 					if isMovingToCurrentSector {
@@ -155,28 +166,51 @@ func main() {
 	}
 	fmt.Println("Daily report:")
 
-	rodentId := rand.IntN(len(rodents)) + 1
+	rodentID := rand.IntN(len(rodents)) + 1
 
 	for i, rodent := range rodents {
-		if rodent.ID == rodentId {
-			printRodentLocation(rodent)
+		if rodent.ID == rodentID {
+			rodent.printRodentLocation()
 			rodents = append(rodents[:i], rodents[i+1:]...)
 		}
 	}
 }
-func printRodentLocation(rodent Rodent) {
-	fmt.Printf("%s with ID %d has been in the morning in %s", rodent.Type, rodent.ID, getSectorID(rodent.Morning))
-	fmt.Printf(", in the afternoon in %s", getSectorID(rodent.Afternoon))
-	fmt.Printf(", in the evening in %s\n", getSectorID(rodent.Evening))
 
-	if rodent.hasPassedThroughTheSensor() {
-		fmt.Printf("passed through the sensor\n")
+func buildSercors() []Sector {
+	return []Sector{
+		{
+			SectorID:  TopLeft,
+			HasSensor: false,
+			Morning:   SectorState{Times: Morning},
+			Afternoon: SectorState{Times: Afternoon},
+			Evening:   SectorState{Times: Evening},
+		},
+		{
+			SectorID:  TopRight,
+			HasSensor: false,
+			Morning:   SectorState{Times: Morning},
+			Afternoon: SectorState{Times: Afternoon},
+			Evening:   SectorState{Times: Evening},
+		},
+		{
+			SectorID:  BottomLeft,
+			HasSensor: false,
+			Morning:   SectorState{Times: Morning},
+			Afternoon: SectorState{Times: Afternoon},
+			Evening:   SectorState{Times: Evening},
+		},
+		{
+			SectorID:  BottomRight,
+			HasSensor: false, Morning: SectorState{Times: Morning},
+			Afternoon: SectorState{Times: Afternoon},
+			Evening:   SectorState{Times: Evening},
+		},
+		{
+			SectorID:  Center,
+			HasSensor: true,
+			Morning:   SectorState{Times: Morning},
+			Afternoon: SectorState{Times: Afternoon},
+			Evening:   SectorState{Times: Evening},
+		},
 	}
-}
-
-func getSectorID(location *Location) SectorID {
-	if location == nil {
-		return "nil"
-	}
-	return location.SectorID
 }
