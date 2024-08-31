@@ -137,7 +137,7 @@ func main() {
 		{ID: 8, Type: Porcupine},
 	}
 
-	sectors := buildSercors()
+	sectors := buildSectors()
 
 	dayTimes := [3]DayTime{
 		Morning,
