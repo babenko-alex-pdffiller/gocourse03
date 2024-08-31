@@ -176,7 +176,7 @@ func main() {
 	}
 }
 
-func buildSercors() []Sector {
+func buildSectors() []Sector {
 	return []Sector{
 		{
 			SectorID:  TopLeft,
